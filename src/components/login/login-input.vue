@@ -40,7 +40,7 @@
 					alert("请输入正确");
 				} else {
 					var _this = this;
-					this.axios.get("http://192.168.0.105:4000/login/cellphone", {
+					this.axios.get("http://39.106.114.207:3000/login/cellphone", {
 						params: {
 							phone: this.userName, //账号
 							password: this.passWord //密码

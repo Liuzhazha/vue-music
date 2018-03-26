@@ -1,14 +1,17 @@
 <!--登录成功主体页面-->
 <template>
 	<div>
-		<p>登录成功</p>
-		<div @click="unlogin">注销</div>
+		<main-head></main-head>
 	</div>
 </template>
 
 <script>
 	import { setCookie, getCookie, delCookie } from 'api/cookie.js';
+	import mainHead from 'components/main/main-head'
 	export default {
+		components: {
+			mainHead
+		},
 		data() {
 			return {
 				userName: "", //用户名
