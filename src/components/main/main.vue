@@ -1,6 +1,6 @@
 <!--登录成功主体页面-->
 <template>
-	<div>
+	<div class="main">
 		<main-head></main-head>
 	</div>
 </template>
@@ -34,5 +34,5 @@
 </script>
 
 <style>
-
+.main{ height: 100%; background: #9680c4;}
 </style>

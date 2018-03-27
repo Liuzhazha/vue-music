@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style>
-@import "//at.alicdn.com/t/font_555616_w41lmffg8pvi.css";
+@import "//at.alicdn.com/t/font_555616_1mi6iar144tv5cdi.css";
 body,html,#app{
 
   height: 100%;  font-family: "robot";
