@@ -2,15 +2,20 @@
 <template>
 	<div class="main">
 		<main-head></main-head>
+		<div>
+			<main-banner></main-banner>
+		</div>
 	</div>
 </template>
 
 <script>
 	import { setCookie, getCookie, delCookie } from 'api/cookie.js';
-	import mainHead from 'components/main/main-head'
+	import mainHead from 'components/main/main-head';
+	import mainBanner from 'components/main/main-banner';
+	
 	export default {
 		components: {
-			mainHead
+			mainHead,mainBanner
 		},
 		data() {
 			return {

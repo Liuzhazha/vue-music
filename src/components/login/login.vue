@@ -3,7 +3,7 @@
 	<div class="login-container">
 		<div class="login-top">
 			<div class="imgrow">
-				<i class="iconfont icon-music"></i>
+				<img src="../../assets/icon.png" alt="" />
 			</div>
 			<p>MUSIC</p>
 		</div>
@@ -21,7 +21,6 @@
 		name: 'HelloWorld',
 		data() {
 			return {
-				msg: 'Welcome to Your Vue.js App',
 				qqmusic: [],
 			}
 		},
@@ -56,14 +55,10 @@
 				margin-bottom: 22px;
 				flex-shrink: 0;
 				flex-grow: 0;
-				width: 100%;
+				width: 102.5px;
 				text-align: center;
-				i {
-					font-size: 135px;
-					line-height: 1;
-					color: #fff;
-					flex-shrink: 0;
-					flex-grow: 0;
+				img{
+					width: 100%;
 				}
 			}
 			p {
