@@ -10,10 +10,10 @@
 
 <script>
 	import BScroll from 'better-scroll';
-	import {hasClass,addClass} from 'api/className.js';
+	import { hasClass, addClass } from 'api/className.js';
 
 	export default {
-		name:'slide',
+		name: 'slide',
 		props: {
 			loop: {
 				type: Boolean,
@@ -28,25 +28,33 @@
 				default: 3000,
 			},
 		},
-		mounted(){
-			setTimeout(()=>{
+		mounted() {
+			setTimeout(() => {
 				this._setSliderWidth();
 				this._initSlider();
-			},20)
+			}, 20)
 		},
-		methods:{
-			_setSliderWidth(){
+		methods: {
+			_setSliderWidth() {
 				this.children = this.$refs.sliderGroup.children;
-				
+
 				let width = 0;
 				let sliderWidth = this.$refs.slider.clientWidth;
-					 		
+				for(let i = 0; i < this.children.length; i++) {
+					let child = this.children[i];
+					child.style.width = sliderWidth + 'px';
+					width += sliderWidth;
+				}
+				if(this.loop) {
+					width += 2 * sliderWidth;
+				}
+				this.$refs.sliderGroup.style.width = width + 'px';
 			},
-			_initSlider(){
-				
+			_initSlider() {
+
 			}
 		}
-		
+
 	}
 </script>
 
@@ -54,12 +62,15 @@
 	.banner {
 		background: #FFFFFF;
 		padding: 15px;
-		>.wrapper{
-		>ul{
-			>li{
-			img{ display: block; width: 100%;}
-		}
-		}
+		>.wrapper {
+			>ul {
+				>li {
+					img {
+						display: block;
+						width: 100%;
+					}
+				}
+			}
 		}
 	}
 </style>

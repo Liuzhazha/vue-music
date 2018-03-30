@@ -2,7 +2,7 @@
 <template>
 	<div class="main">
 		<main-head></main-head>
-		<div>
+		<div v-if="banner.length" class="banner-wraper">
 			<main-banner>
 				<li v-for="img in banner"><img :src="img.pic" alt="" /></li>
 			</main-banner>
