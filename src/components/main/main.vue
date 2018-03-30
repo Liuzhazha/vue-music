@@ -3,7 +3,9 @@
 	<div class="main">
 		<main-head></main-head>
 		<div>
-			<main-banner></main-banner>
+			<main-banner>
+				<li v-for="img in banner"><img :src="img.pic" alt="" /></li>
+			</main-banner>
 		</div>
 	</div>
 </template>
@@ -23,13 +25,25 @@
 				userFace: "", //用户头像
 				userId: "", //用户id 用于读取用户信息
 				userDescription: "", //用户签名
-				userJson: "", //用户信息json字符串  需转换				
+				userJson: "", //用户信息json字符串  需转换	
+				banner:[],//banner数据
 			}
 		},
-		mounted(){
+		created(){
 			this.userId = getCookie("userId");
+			this.getBanner();
+		},
+		mounted(){
+			
 		},
 		methods: {
+			getBanner:function(){
+				var _this = this;
+				this.axios.get("http://39.106.114.207:443/banner").then((res)=>{
+				_this.banner = res.data.banners;
+				console.log(res.data.banners)
+				})
+			},
 			unlogin: function() {
 				delCookie("userId")
 			}

@@ -3,7 +3,7 @@ export function addClass(el,className){
 		return;
 	}
 	var newClass = el.className.split(' ');
-	newClass.push(calssName);
+	newClass.push(className);
 	newClass= newClass.join(' ');
 	el.className = newClass;
 	
