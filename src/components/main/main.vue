@@ -3,9 +3,7 @@
 	<div class="main">
 		<main-head></main-head>
 		<div v-if="banner.length" class="banner-wraper">
-			<main-banner>
-				<li v-for="img in banner"><img :src="img.pic" alt="" /></li>
-			</main-banner>
+			<main-banner :bannerSrc="banner" ></main-banner>
 		</div>
 	</div>
 </template>
@@ -41,7 +39,7 @@
 				var _this = this;
 				this.axios.get("http://39.106.114.207:443/banner").then((res)=>{
 				_this.banner = res.data.banners;
-				console.log(res.data.banners)
+//				console.log(res.data.banners)
 				})
 			},
 			unlogin: function() {
@@ -54,4 +52,5 @@
 
 <style>
 .main{ height: 100%; background: #9680c4;}
+.banner-wraper{padding: 15px; margin: 0 auto;overflow: hidden;background: #FFFFFF;}
 </style>

@@ -7,10 +7,11 @@ import VueAxios from 'vue-axios'
 import App from './App'
 import router from './router'
 import fastclick from 'fastclick'
+import 'swiper/dist/css/swiper.css'
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
-
+	
 fastclick.attach(document.body)
 
 /* eslint-disable no-new */

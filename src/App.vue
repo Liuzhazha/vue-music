@@ -16,6 +16,6 @@ body,html,#app{
 
   height: 100%;  font-family: "robot";
 }
-*{ margin: 0; padding: 0;transition: all .75s;  list-style:none;}
+*{ margin: 0; padding: 0;   list-style:none;}
 
 </style>

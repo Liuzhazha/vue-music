@@ -1,57 +1,32 @@
 <template>
-	<div class="banner">
-		<div class="wrapper" ref="slider">
-			<ul class="content" ref="sliderGroup">
-				<slot></slot>
-			</ul>
-		</div>
-	</div>
+	 <swiper>
+	   <swiper-slide v-if="bannerSrc" v-for="img in bannerSrc" ><img :src="img.pic" alt="" /></swiper-slide>     
+ 	 </swiper>
 </template>
 
 <script>
-	import BScroll from 'better-scroll';
+	import 'swiper/dist/css/swiper.css'
 	import { hasClass, addClass } from 'api/className.js';
-
+	import { swiper, swiperSlide } from 'vue-awesome-swiper'
 	export default {
-		name: 'slide',
-		props: {
-			loop: {
-				type: Boolean,
-				default: true,
-			},
-			autoPlay: {
-				type: Boolean,
-				default: true,
-			},
-			interval: {
-				type: Number,
-				default: 3000,
-			},
+		data(){
+			return{
+ 
+			}
 		},
+		props:['bannerSrc'],
+ 		 components: {  
+	      swiper,  
+	      swiperSlide  
+	    }, 
 		mounted() {
 			setTimeout(() => {
-				this._setSliderWidth();
-				this._initSlider();
+
 			}, 20)
 		},
 		methods: {
-			_setSliderWidth() {
-				this.children = this.$refs.sliderGroup.children;
-
-				let width = 0;
-				let sliderWidth = this.$refs.slider.clientWidth;
-				for(let i = 0; i < this.children.length; i++) {
-					let child = this.children[i];
-					child.style.width = sliderWidth + 'px';
-					width += sliderWidth;
-				}
-				if(this.loop) {
-					width += 2 * sliderWidth;
-				}
-				this.$refs.sliderGroup.style.width = width + 'px';
-			},
 			_initSlider() {
-
+				 
 			}
 		}
 
@@ -59,18 +34,9 @@
 </script>
 
 <style lang="scss" scoped>
-	.banner {
-		background: #FFFFFF;
-		padding: 15px;
-		>.wrapper {
-			>ul {
-				>li {
-					img {
-						display: block;
-						width: 100%;
-					}
-				}
-			}
-		}
-	}
+ .banner-wraper{
+ 	img{
+ 		display: block; width: 100%;border-radius: 5px;
+ 	}
+ }
 </style>
