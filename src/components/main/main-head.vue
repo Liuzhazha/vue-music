@@ -12,8 +12,9 @@
 
 <style lang="scss">
 	.headContainer{
+		background: #9680c4;
 		>*{ font-family: 'PingFang SC';}
-		display: flex; display: -webkit-flex; flex-direction: row; margin-left: 15px;margin-right: 15px; justify-content: space-between; height: 44px; align-items: center;
+		display: flex; display: -webkit-flex; flex-direction: row; padding-left: 15px;padding-right: 15px; justify-content: space-between; height: 44px; align-items: center;
 		.search{
 			i{font-size: 18px;color: #FFFFFF }
 		}

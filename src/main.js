@@ -7,10 +7,12 @@ import VueAxios from 'vue-axios'
 import App from './App'
 import router from './router'
 import fastclick from 'fastclick'
+import VueScroller from 'vue-scroller'
 import 'swiper/dist/css/swiper.css'
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
+Vue.use(VueScroller)
 	
 fastclick.attach(document.body)
 
