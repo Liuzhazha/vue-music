@@ -8,19 +8,18 @@ import songSheet from 'components/song-sheet/song-sheet'
 Vue.use(Router)
 
 export default new Router({
-	routes: [
-		{
-		name:'exclusiveBody',
-		path:'/main/exclusiveBody',
-		component:exclusiveBody
+	routes: [{
+			name: 'exclusiveBody',
+			path: '/main/exclusiveBody',
+			component: exclusiveBody
 		},
 		{
-		name:'songSheet',
-		path:'/main/song-sheet/:id',
-		component:songSheet
+			name: 'songSheet',
+			path: '/main/song-sheet/:id',
+			component: songSheet
 		},
 		{
-			name:'login',
+			name: 'login',
 			path: '/login',
 			component: login
 		},

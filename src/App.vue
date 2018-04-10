@@ -19,14 +19,16 @@ export default {
   			if(from.name == "login"){ this.transitionName = '';  return }
 				const toDepth = to.path.split('/').length
 				const fromDepth = from.path.split('/').length
+				
 				this.transitionName = toDepth < fromDepth ? 'slide-down' : 'slide-top';
+				console.log(this.transitionName)
   	}
   }
 }
 </script>
 
 <style>
-@import "//at.alicdn.com/t/font_555616_1mi6iar144tv5cdi.css";
+@import "//at.alicdn.com/t/font_555616_iurjeooba2md9529.css";
 body,html,#app{
 
   height: 100%;  font-family: "robot";
