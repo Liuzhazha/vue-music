@@ -2,7 +2,7 @@
 	<div class="commetSong">
 		<ul>
 			<router-link v-for="(song, index) in commentSong" :key="index"  tag='li' :to="'/main/song-sheet/'+song.id">
-				<img :src="song.coverImgUrl" alt="" />
+				<img :src="song.picUrl" alt="" />
 				<div class="btrow">
 					<h4>{{song.name}}</h4></div>
 			</router-link>

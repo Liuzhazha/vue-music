@@ -2,7 +2,7 @@
 	<div class="headContainer">
 		 <div class="search"><i class="iconfont icon-search"></i></div>
 		 <div  class="recommend active">推荐  </div>
-		 <div class="special">专题  </div>
+		 <div class="special">我的 </div>
 		 <div class="music"><i class="iconfont icon-youyinpin"></i></div>
 	</div>
 </template>

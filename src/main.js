@@ -6,6 +6,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import App from './App'
 import router from './router'
+import store from './store'
 import fastclick from 'fastclick'
 import VueScroller from 'vue-scroller'
 import 'swiper/dist/css/swiper.css'
@@ -13,13 +14,16 @@ import 'swiper/dist/css/swiper.css'
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
 Vue.use(VueScroller)
-	
+
 fastclick.attach(document.body)
 
 /* eslint-disable no-new */
 new Vue({
 	el: '#app',
+	store,
 	router,
-	components: { App },
+	components: {
+		App
+	},
 	template: '<App/>'
 })
