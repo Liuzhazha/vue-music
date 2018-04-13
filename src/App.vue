@@ -1,18 +1,17 @@
 <template>
 	<div id="app">
+
 		<transition :name="transitionName">
 			<keep-alive>
 				<router-view class="Router" />
 			</keep-alive>
 		</transition>
-			<main-play style=" position: fixed; bottom: 0; width: 100%;"></main-play>
+		<main-play style=" position: fixed; bottom: 0; width: 100%;"></main-play>
 	</div>
 </template>
 
 <script>
 	import mainPlay from 'components/play/main-play';
-	
-	
 	export default {
 		name: 'App',
 		data() {
@@ -20,7 +19,7 @@
 				transitionName: '',
 			}
 		},
-		components:{
+		components: {
 			mainPlay
 		},
 		watch: {
@@ -32,13 +31,14 @@
 				const toDepth = to.path.split('/').length
 				const fromDepth = from.path.split('/').length
 				this.transitionName = toDepth < fromDepth ? 'slide-down' : 'slide-top';
-			}
-		}
+			},
+
+		},
 	}
 </script>
 
 <style>
-	@import "//at.alicdn.com/t/font_555616_mc8s5ha99yzdj9k9.css";
+	@import "//at.alicdn.com/t/font_555616_kajwm8gnuxmq85mi.css";
 	body,
 	html,
 	#app {

@@ -1,7 +1,7 @@
 <template>
 	<div class="main">
 		<song-head></song-head>
-		<scroller :height="'82%'" style="top: 44px;bottom: 44px;">
+		<scroller class="scroolerH" style="top: 44px;bottom: 44px;">
 			<loader v-show="isLoading"></loader>
 			<song-list v-if="!isLoading" :songList="songList"></song-list>
 		</scroller>
@@ -13,7 +13,6 @@
 	import songHead from 'components/song-sheet/song-head'
 	import songList from 'components/song-sheet/song-list'
 	import loader from 'components/public-temp/loader'
-
 
 	export default {
 		components: {
@@ -50,7 +49,11 @@
 	}
 </script>
 
-<style>
+<style scoped>
+	.scroolerH {
+		height: calc(100% - 88px) !important;
+	}
+	
 	.main {
 		height: 100%;
 		background: #FFFFFF;
