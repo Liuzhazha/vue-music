@@ -18,8 +18,6 @@
 				</comment-song>
 			</div>
 		</scroller>
-
- 
 	</div>
 
 </template>

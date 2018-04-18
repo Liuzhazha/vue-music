@@ -6,7 +6,7 @@
 				<router-view class="Router" />
 			</keep-alive>
 		</transition>
-		<main-play style=" position: fixed; bottom: 0; width: 100%;"></main-play>
+		<main-play  style=" position: fixed; bottom: 0; width: 100%;"></main-play>
 	</div>
 </template>
 

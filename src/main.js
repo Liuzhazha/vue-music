@@ -17,6 +17,7 @@ Vue.use(VueScroller)
 
 fastclick.attach(document.body)
 
+ 
 /* eslint-disable no-new */
 new Vue({
 	el: '#app',
@@ -27,3 +28,4 @@ new Vue({
 	},
 	template: '<App/>'
 })
+

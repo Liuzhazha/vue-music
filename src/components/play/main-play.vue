@@ -1,30 +1,50 @@
 <template>
-	<div class="mainPlay">
+	<div v-if="this.currentSong.id" class="mainPlay">
 		<transition :name="playTransitionName">
 			<div v-show="fullScreen" class="fullPlay">
-				<div class="bgImg"><img :src="song.album.blurPicUrl" alt="" /></div>
+				<div class="bgImg"><img :src="currentSong.album.blurPicUrl" alt="" /></div>
 				<div class="playTop">
 					<div @click="setMiniScreen" class="lt"><i class="iconfont icon-fanhui"></i></div>
 					<div class="ct">
-						<h3>{{song.name}}</h3>
-						<p>{{song.artists[0].name}}</p>
+						<h3>{{currentSong.name}}</h3>
+						<p>{{currentSong.artists[0].name}}</p>
 					</div>
 				</div>
 
 				<div class="cdWraper">
-					<div class="cd" :class="{startMove : playing}">
+					<div class="cd" :class="{startMove : !playing}">
 						<div></div>
-						<img :src="song.album.blurPicUrl" alt="" />
+						<img :src="currentSong.album.blurPicUrl" alt="" />
+					</div>
+
+				</div>
+				<audio ref="audio" :src="'http://music.163.com/song/media/outer/url?id='+currentSong.id+'.mp3'" @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
+				<div class="timeLine">
+					<div class="container">
+						<div class="alreadyTime">{{ currentTime | lineTime}}</div>
+						<div class="line">
+							<div ref="alreadyLine" class="alreadyLine"></div>
+						</div>
+						<div class="allTime">{{currentSong.hMusic.playTime / 1000 | lineTime }}</div>
 					</div>
 				</div>
 
 				<div class="btIcon">
 					<div class="iconRow">
 						<i class="iconfont icon-liebiaoxunhuan"></i>
-						<i class="iconfont icon-shangyishou-yuanshijituantubiao"></i>
-						<i class="iconfont icon-bofang-yuanshijituantubiao"></i>
-						<i class="iconfont icon-xiayishou-yuanshijituantubiao"></i>
-						<i class="iconfont icon-liebiao"></i>
+						<div @click="prev">
+							<icon-prev></icon-prev>
+						</div>
+						<div @click=" stopPlaying" v-show="playing">
+							<icon-stop></icon-stop>
+						</div>
+						<div @click="startPlaying" v-show="!playing">
+							<icon-video @click="startPlaying"></icon-video>
+						</div>
+						<div @click="next">
+							<icon-next></icon-next>
+						</div>
+						<icon-list></icon-list>
 					</div>
 				</div>
 
@@ -32,10 +52,10 @@
 		</transition>
 
 		<div @click="setFullscreen" class="miniPlay">
-			<div class="lt"><img :src="song.album.blurPicUrl" /></div>
+			<div class="lt"><img :src="currentSong.album.blurPicUrl" /></div>
 			<div class="ct">
-				<h3>{{song.name}}</h3>
-				<p>{{song.artists[0].name}}</p>
+				<h3>{{currentSong.name}}</h3>
+				<p>{{currentSong.artists[0].name}}</p>
 			</div>
 			<div class="rt1"><i></i></div>
 			<div class="rt2"></div>
@@ -45,12 +65,40 @@
 </template>
 
 <script>
+	var first_C = 0;
+	document.onclick = () => {
+		if(first_C == 0) {
+			setTimeout(() => {
+				if(document.getElementsByTagName("audio")[0]) {
+					document.getElementsByTagName("audio")[0].play();
+					document.getElementsByTagName("audio")[0].pause();
+					first_C = 1;
+				}
+			}, 0)
+		}
+
+	}
+
 	import { mapGetters, mapMutations } from 'vuex'
+	import iconStop from 'common/svg/icon-stop'
+	import iconVideo from 'common/svg/icon-video'
+	import iconPrev from 'common/svg/icon-prev'
+	import iconNext from 'common/svg/icon-next'
+	import iconList from 'common/svg/icon-list'
 
 	export default {
+		components: {
+			iconStop,
+			iconVideo,
+			iconPrev,
+			iconNext,
+			iconList
+		},
 		data() {
 			return {
+				songReady: false,
 				playTransitionName: '',
+				currentTime: 0, //当前时间
 			}
 		},
 		computed: {
@@ -58,28 +106,68 @@
 				'song',
 				'playing',
 				'fullScreen',
-			])
+				'currentSong',
+				'currentIndex',
+				'playList'
+
+			]),
+			percent(){
+				return (100- parseInt(this.currentTime / (this.currentSong.hMusic.playTime / 1000) *100)) + '%';
+			}
 		},
 		activated() {
-			console.log(this.fullScreen)
+			//						console.log(this.currentSong)
 		},
 		created() {
-			console.log(this.fullScreen)
+//			console.log(this.currentSong)
 		},
 		methods: {
 			...mapMutations({
 				setPlaying: 'SET_PLAYING_STATE',
 				setFullScreen: 'SET_FULL_SCREEN',
+				setCurrentIndex: 'SET_CURRENT_INDEX',
 
 			}),
 			setFullscreen() {
 				this.setFullScreen(true)
-				console.log(this.fullScreen)
-
 			},
 			setMiniScreen() {
 				this.setFullScreen(false)
-				console.log(this.fullScreen)
+			},
+			startPlaying() {
+				this.setPlaying(true);
+				const _audio = document.getElementsByTagName("audio")[0];
+				_audio.play();
+			},
+			stopPlaying() {
+				this.setPlaying(false)
+			},
+			next() {
+				let index = this.currentIndex + 1
+				if(index > this.playList.length - 1) {
+					index = this.playList.length - 1;
+				}
+				this.setCurrentIndex(index)
+				this.songReady = false;
+			},
+			prev() {
+				let index = this.currentIndex - 1
+				if(index < 0) {
+					index = 0
+				}
+				this.setCurrentIndex(index)
+				this.songReady = false;
+			},
+			ready() {
+				this.songReady = true
+			},
+			error() {
+
+			},
+			updateTime(e) {
+				this.currentTime = this.$refs.audio.currentTime;
+				this.$refs.alreadyLine.style.transform = 'translateX( -'+this.percent +')';
+				console.log(this.$refs.alreadyLine)
 			},
 		},
 		watch: {
@@ -88,8 +176,46 @@
 				//true代表打开动画
 				//否则是关闭
 				this.playTransitionName = e ? 'slide-top' : 'slide-down';
+			},
+			'currentSong' () {
+				let _this = this
+				setTimeout(() => {
+					_this.startPlaying()
+				}, 0)
+			},
+			'playing' (playing) {
+				const _audio = this.$refs.audio;
+				this.$nextTick(() => {
+					playing ? _audio.play() : _audio.pause()
+				})
+
+			},
+			'$route' (to, from) { //返回缩小播放器
+				let _from = from.fullPath
+				if(this.fullScreen) {
+					this.$router.push({
+						path: _from
+					});
+					this.setFullScreen(false)
+				}
 			}
-		}
+		},
+		filters: {
+			lineTime: function(value) {
+				if(!value) {
+					return ' 00:00'
+				}
+				var s = parseInt(value) % 60;
+				var m = parseInt(value / 60);
+				if(s < 10) {
+					s = '0' + s;
+				}
+				if(m < 10) {
+					m = '0' + m
+				}
+				return m + ':' + s;
+			},
+		},
 	}
 </script>
 
@@ -147,6 +273,7 @@
 				width: 70%;
 				top: 0;
 				.cd {
+					animation: cdTransition 10s linear infinite;
 					>div {
 						transform-origin: center bottom;
 						-webkit-transform-origin: center bottom;
@@ -165,7 +292,7 @@
 					}
 				}
 				.cd.startMove {
-					animation: cdTransition 10s linear infinite;
+					animation-play-state: paused;
 				}
 			}
 			.playTop {
@@ -228,11 +355,11 @@
 					display: flex;
 					flex-direction: row;
 					justify-content: space-around;
-					align-items:center;
-					width:calc(100% - 30px);
-					margin:0 auto;
+					align-items: center;
+					width: calc(100% - 30px);
+					margin: 0 auto;
 					i {
-						color:#fff;
+						color: #fff;
 						&:nth-of-type(1) {
 							font-size: 25px;
 						}
@@ -247,6 +374,43 @@
 						}
 						&:nth-of-type(5) {
 							font-size: 25px;
+						}
+					}
+				}
+			}
+			.timeLine {
+				height: 20px;
+				bottom: 80px;
+				position: absolute;
+				width: 100%;
+				left: 0;
+				.container {
+					display: flex;
+					height: 20px;
+					align-items: center;
+					.alreadyTime {
+						width: 55px;
+						text-align: center;
+						font-size: 12px;
+						color: #cecece;
+					}
+					.allTime {
+						width: 55px;
+						text-align: center;
+						font-size: 12px;
+						color: #cecece;
+					}
+					.line {
+						height: 2px;
+						background: #E3E3E3;
+						width: 100%;
+						overflow: hidden;
+						.alreadyLine {
+							transition: all .2s;
+							width: 100%;
+							background: #B130D2;
+							height: 2px;
+							transform: translateX(-100%);
 						}
 					}
 				}

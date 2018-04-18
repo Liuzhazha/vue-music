@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<ul>
-			<li v-for="(song,index) in songList" @click="selectSong(song)" >
+			<li  v-for="(song,index) in songList" @click="selectSong(index)" >
 				<div class="lt">{{index+1}}</div>
 				<div class="ct">
 					<h3>{{song.name}}</h3>
@@ -21,12 +21,13 @@
 	export default {
 		props: ['songList'],
 		methods: {
-			selectSong(id) {
-				console.log(id)
-				this.setSong(id)
+			selectSong(index) {
+				this.setPlayList(this.songList)
+				this.setCurrentIndex(index)
 			},
 			...mapMutations({
-				setSong: 'SET_SONG'
+				setPlayList:'SET_PLAYLIST',
+				setCurrentIndex:'SET_CURRENT_INDEX',
 			}),
 		},
 	}
