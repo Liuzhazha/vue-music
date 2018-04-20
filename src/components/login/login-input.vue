@@ -24,8 +24,8 @@
 	export default {
 		data() {
 			return {
-				userName: "15890289382",
-				passWord: "liufengyi",
+				userName: "",
+				passWord: "",
 				userId: "123", //用户id 用于获取用户详情
 			}
 		},

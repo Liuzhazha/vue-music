@@ -2,10 +2,13 @@
 	<div id="app">
 
 		<transition :name="transitionName">
-			<keep-alive>
+		<keep-alive>
+			
 				<router-view class="Router" />
-			</keep-alive>
+		</keep-alive>
+				
 		</transition>
+
 		<main-play  style=" position: fixed; bottom: 0; width: 100%;"></main-play>
 	</div>
 </template>
@@ -38,7 +41,7 @@
 </script>
 
 <style>
-	@import "//at.alicdn.com/t/font_555616_kajwm8gnuxmq85mi.css";
+	@import "//at.alicdn.com/t/font_555616_uv40kezyvachm2t9.css";
 	body,
 	html,
 	#app {
@@ -70,39 +73,23 @@
 	}
 	
 	.slide-top-enter-active {
+		/*进入页面 ----新页面动画*/ 
 		animation: slideInUp .3s;
 	}
 	
 	.slide-top-leave-active {
-		animation: leave .3s reverse;
-	}
-	
-	@-webkit-keyframes slideInUp {
-		0% {
-			opacity: 0;
-			-webkit-transform: translateY(100px);
-			transform: translateY(100px)
-		}
-		50% {
-			opacity: 0.8;
-		}
-		100% {
-			opacity: 1;
-			-webkit-transform: translateY(0);
-			transform: translateY(0)
-		}
+		/*进入页面 ------ 旧页面动画*/
+		animation: leave .3s;
 	}
 	
 	@keyframes slideInUp {
 		0% {
-			opacity: 0.5;
+			opacity: 0;
 			-webkit-transform: translateY(100px);
 			-ms-transform: translateY(100px);
 			transform: translateY(100px)
 		}
-		50% {
-			opacity: 0.9;
-		}
+
 		100% {
 			opacity: 1;
 			-webkit-transform: translateY(0);
@@ -110,36 +97,37 @@
 			transform: translateY(0)
 		}
 	}
-	
-	@keyframes leave {
+
+		@keyframes leave {
 		0% {
 			opacity: 1;
 		}
-		100 {
+		100% {
 			opacity: 0;
 		}
 	}
 	
 	.slide-down-enter-active {
+		/*离开页面 ------- 旧页面动画*/
 		animation: inDown .3s;
 	}
 	
 	.slide-down-leave-active {
+		/*离开页面 -------新页面动画*/
 		animation: slideOutDown .3s;
+		
 	}
 	
-	@-webkit-keyframes slideOutDown {
+	
+	
+	
+	@keyframes slideOutDown {
 		0% {
 			opacity: 1;
-			-webkit-transform: translateY(0);
 			transform: translateY(0)
-		}
-		50% {
-			opacity: 1;
 		}
 		100% {
 			opacity: 0;
-			-webkit-transform: translateY(100px);
 			transform: translateY(100px)
 		}
 	}
@@ -148,8 +136,11 @@
 		0% {
 			opacity: 0;
 		}
-		100 {
+		100% {
 			opacity: 1;
 		}
 	}
+	
+		
+
 </style>

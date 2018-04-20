@@ -13,12 +13,14 @@
 
 				<div class="cdWraper">
 					<div class="cd" :class="{startMove : !playing}">
-						<div></div>
-						<img :src="currentSong.album.blurPicUrl" alt="" />
+						<img class="cdBg" src="../../../dist/static/img/cdWraper.3b4bce1.png" />
+						<span>
+							<img :src="currentSong.album.blurPicUrl" alt="" />
+						</span>
 					</div>
-
 				</div>
-				<audio ref="audio" :src="'http://music.163.com/song/media/outer/url?id='+currentSong.id+'.mp3'" @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
+
+				<audio ref="audio" :src="'http://music.163.com/song/media/outer/url?id='+currentSong.id+'.mp3'" @canplay="ready" @ended="hasEnd" @error="error" @timeupdate="updateTime"></audio>
 				<div class="timeLine">
 					<div class="container">
 						<div class="alreadyTime">{{ currentTime | lineTime}}</div>
@@ -28,10 +30,9 @@
 						<div class="allTime">{{currentSong.hMusic.playTime / 1000 | lineTime }}</div>
 					</div>
 				</div>
-
 				<div class="btIcon">
 					<div class="iconRow">
-						<i class="iconfont icon-liebiaoxunhuan"></i>
+						<i class="iconfont" @click="changePlayState"  :class="playModeIcon"></i>
 						<div @click="prev">
 							<icon-prev></icon-prev>
 						</div>
@@ -39,15 +40,16 @@
 							<icon-stop></icon-stop>
 						</div>
 						<div @click="startPlaying" v-show="!playing">
-							<icon-video @click="startPlaying"></icon-video>
+							<icon-video></icon-video>
 						</div>
 						<div @click="next">
 							<icon-next></icon-next>
 						</div>
+						<div @click.stop="listShowTrigger">
 						<icon-list></icon-list>
+						</div>
 					</div>
 				</div>
-
 			</div>
 		</transition>
 
@@ -57,9 +59,22 @@
 				<h3>{{currentSong.name}}</h3>
 				<p>{{currentSong.artists[0].name}}</p>
 			</div>
-			<div class="rt1"><i></i></div>
-			<div class="rt2"></div>
+			<div @click.stop=" stopPlaying" v-show="playing">
+				<icon-stop-m></icon-stop-m>
+			</div>
+			<div @click.stop="startPlaying" v-show="!playing">
+				<icon-video-m></icon-video-m>
+			</div>
+			<div @click.stop="listShowTrigger">
+				<icon-list-m></icon-list-m>
+			</div>
 		</div>
+
+		<div @click.stop="listShowTrigger" v-show="listShow" class="mask"></div>
+
+		<transition :name="playListTransition">
+			<play-list-panel v-show="listShow"></play-list-panel>
+		</transition>
 
 	</div>
 </template>
@@ -81,10 +96,14 @@
 
 	import { mapGetters, mapMutations } from 'vuex'
 	import iconStop from 'common/svg/icon-stop'
+	import iconStopM from 'common/svg/icon-stop-m'
 	import iconVideo from 'common/svg/icon-video'
+	import iconVideoM from 'common/svg/icon-video-m'
 	import iconPrev from 'common/svg/icon-prev'
 	import iconNext from 'common/svg/icon-next'
 	import iconList from 'common/svg/icon-list'
+	import iconListM from 'common/svg/icon-list-m'
+	import playListPanel from 'components/play/play-list'
 
 	export default {
 		components: {
@@ -92,13 +111,19 @@
 			iconVideo,
 			iconPrev,
 			iconNext,
-			iconList
+			iconList,
+			iconVideoM,
+			iconStopM,
+			iconListM,
+			playListPanel
 		},
 		data() {
 			return {
 				songReady: false,
 				playTransitionName: '',
 				currentTime: 0, //当前时间
+				playListTransition: 'slide', //底部列表动画
+
 			}
 		},
 		computed: {
@@ -108,24 +133,31 @@
 				'fullScreen',
 				'currentSong',
 				'currentIndex',
-				'playList'
+				'playList',
+				'listShow',
+				'mode'
 
 			]),
-			percent(){
-				return (100- parseInt(this.currentTime / (this.currentSong.hMusic.playTime / 1000) *100)) + '%';
+			percent() {
+				return(100 - parseInt(this.currentTime / (this.currentSong.hMusic.playTime / 1000) * 100)) + '%';
+			},
+			playModeIcon(){
+				return this.mode == 0 ? 'icon-liebiaoxunhuan' : this.mode == 1 ? ' icon-danquxunhuan' : 'icon-icon--'
 			}
 		},
 		activated() {
 			//						console.log(this.currentSong)
 		},
 		created() {
-//			console.log(this.currentSong)
+			//			console.log(this.currentSong)
 		},
 		methods: {
 			...mapMutations({
 				setPlaying: 'SET_PLAYING_STATE',
 				setFullScreen: 'SET_FULL_SCREEN',
 				setCurrentIndex: 'SET_CURRENT_INDEX',
+				setListShow: 'SET_LIST_SHOW',
+				setPlayMode: 'SET_PLAY_MODE',
 
 			}),
 			setFullscreen() {
@@ -164,11 +196,20 @@
 			error() {
 
 			},
+			hasEnd() {
+				this.next()
+			},
 			updateTime(e) {
 				this.currentTime = this.$refs.audio.currentTime;
-				this.$refs.alreadyLine.style.transform = 'translateX( -'+this.percent +')';
-				console.log(this.$refs.alreadyLine)
+				this.$refs.alreadyLine.style.transform = 'translateX( -' + this.percent + ')';
 			},
+			listShowTrigger() {
+				this.setListShow(!this.listShow)
+			},
+			changePlayState(){
+				const currentPlayMode = this.mode + 1 ;
+				this.setPlayMode( currentPlayMode % 3 )
+			}
 		},
 		watch: {
 			'fullScreen' (e) {
@@ -198,7 +239,7 @@
 					});
 					this.setFullScreen(false)
 				}
-			}
+			},
 		},
 		filters: {
 			lineTime: function(value) {
@@ -220,25 +261,12 @@
 </script>
 
 <style lang="scss" scoped>
-	@-moz-keyframes cdTransition {
-		from {
-			transform: rotate(0deg);
-			transform-origin: center bottom;
-		}
-		to {
-			transform: rotate(360deg);
-			transform-origin: center bottom;
-		}
-	}
-	
 	@keyframes cdTransition {
 		from {
 			transform: rotate(0deg);
-			transform-origin: center bottom;
 		}
 		to {
 			transform: rotate(360deg);
-			transform-origin: center bottom;
 		}
 	}
 	
@@ -274,21 +302,35 @@
 				top: 0;
 				.cd {
 					animation: cdTransition 10s linear infinite;
+					position: absolute;
 					>div {
-						transform-origin: center bottom;
-						-webkit-transform-origin: center bottom;
-						position: absolute;
 						background: url(../../assets/cdWraper.png);
 						width: 100%;
 						height: 200%;
 						border-radius: 50%;
 						background-size: 100% 100%;
 					}
-					img {
+					img.cdBg {
 						display: block;
-						width: 50%;
-						transform: translate3d(50%, 50%, 0);
-						border-radius: 50%;
+						width: 100%;
+						position: relative;
+					}
+					span {
+						position: absolute;
+						display: block;
+						width: 100%;
+						top: 0;
+						display: flex;
+						height: 100%;
+						align-items: center;
+						justify-content: center;
+						img {
+							width: 50%;
+							display: block;
+							background: none;
+							border-radius: 50%;
+							height: 50%;
+						}
 					}
 				}
 				.cd.startMove {
@@ -447,8 +489,63 @@
 						color: #888888;
 					}
 				}
-				&:nth-of-type(2) {}
+				&:nth-of-type(3) {
+					margin-left: auto;
+				}
+				&:nth-of-type(4) {
+					margin-left: auto;
+				}
+				&:nth-of-type(5) {
+					margin-left: 10px;
+					margin-right: 10px;
+				}
 			}
 		}
+	}
+	
+	.slide-enter-active {
+		animation: slideIn .3s cubic-bezier(0.075, 0.82, 0.165, 1);
+	}
+	
+	.slide-leave-active {
+		animation: slideOut .3s cubic-bezier(0.075, 0.82, 0.165, 1);
+	}
+	
+	@keyframes slideIn {
+		0% {
+			opacity: 0;
+			transform: translateY(100%)
+		}
+		50% {
+			opacity: 0.7;
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0)
+		}
+	}
+	
+	@keyframes slideOut {
+		0% {
+			opacity: 1;
+			transform: translateY(0)
+		}
+		50% {
+			opacity: 0.7;
+		}
+		100% {
+			opacity: 0;
+			transform: translateY(100%)
+		}
+	}
+	
+	.mask {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, .3);
+		top: 0;
+		left: 0;
+		z-index: 159;
 	}
 </style>
