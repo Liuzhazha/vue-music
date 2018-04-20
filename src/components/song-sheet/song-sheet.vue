@@ -3,7 +3,7 @@
 		<song-head></song-head>
 		<scroller class="scroolerH" style="top: 44px;bottom: 44px;">
 			<loader v-show="isLoading"></loader>
-			<song-list v-if="!isLoading" :songList="songList"></song-list>
+			<song-list-temp v-if="!isLoading" :songList="songList"></song-list-temp>
 		</scroller>
 
 	</div>
@@ -11,13 +11,13 @@
 
 <script>
 	import songHead from 'components/song-sheet/song-head'
-	import songList from 'components/song-sheet/song-list'
+	import songListTemp from 'components/song-sheet/song-list'
 	import loader from 'components/public-temp/loader'
 
 	export default {
 		components: {
 			songHead,
-			songList,
+			songListTemp,
 			loader
 		},
 		data() {

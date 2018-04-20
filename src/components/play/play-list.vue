@@ -2,7 +2,7 @@
 		<div class="playList">
 			<ul>
 				<scroller>
-					<li v-for="(song,index) in playList" :class="{ current : index == currentIndex   }" @click.stop="selectSong(index)"><i v-show="index == currentIndex" class="iconfont icon-laba"></i>
+					<li v-for="(song,index) in sequenceList" :class="{ current : index == currentIndex   }" @click.stop="selectSong(index)"><i v-show="index == currentIndex" class="iconfont icon-laba"></i>
 						<p>{{song.name}}</p> <span> - {{song.artists[0].name}}</span> <i  class="iconfont icon-close"></i></li>
 				</scroller>
 			</ul>
@@ -16,6 +16,7 @@
 			...mapGetters([
 				'playList',
 				'currentIndex',
+				'sequenceList'
 			])
 		},
 		created() {

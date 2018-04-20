@@ -32,7 +32,7 @@
 				</div>
 				<div class="btIcon">
 					<div class="iconRow">
-						<i class="iconfont" @click="changePlayState"  :class="playModeIcon"></i>
+						<i class="iconfont" @click="changePlayState" :class="playModeIcon"></i>
 						<div @click="prev">
 							<icon-prev></icon-prev>
 						</div>
@@ -46,7 +46,7 @@
 							<icon-next></icon-next>
 						</div>
 						<div @click.stop="listShowTrigger">
-						<icon-list></icon-list>
+							<icon-list></icon-list>
 						</div>
 					</div>
 				</div>
@@ -104,7 +104,9 @@
 	import iconList from 'common/svg/icon-list'
 	import iconListM from 'common/svg/icon-list-m'
 	import playListPanel from 'components/play/play-list'
-
+	import {playMode} from 'common/js/config'
+	import { shuffle } from 'api/util'
+	
 	export default {
 		components: {
 			iconStop,
@@ -135,14 +137,14 @@
 				'currentIndex',
 				'playList',
 				'listShow',
-				'mode'
-
+				'mode',
+				'sequenceList',
 			]),
 			percent() {
 				return(100 - parseInt(this.currentTime / (this.currentSong.hMusic.playTime / 1000) * 100)) + '%';
 			},
-			playModeIcon(){
-				return this.mode == 0 ? 'icon-liebiaoxunhuan' : this.mode == 1 ? ' icon-danquxunhuan' : 'icon-icon--'
+			playModeIcon() {
+				return this.mode == playMode.sequence ? 'icon-liebiaoxunhuan' : this.mode == playMode.loop ? ' icon-danquxunhuan' : 'icon-icon--'
 			}
 		},
 		activated() {
@@ -158,6 +160,9 @@
 				setCurrentIndex: 'SET_CURRENT_INDEX',
 				setListShow: 'SET_LIST_SHOW',
 				setPlayMode: 'SET_PLAY_MODE',
+				setSequenceList:'SET_SEQUENCE_LIST',
+				setPlayList:'SET_PLAYLIST',
+				
 
 			}),
 			setFullscreen() {
@@ -206,9 +211,23 @@
 			listShowTrigger() {
 				this.setListShow(!this.listShow)
 			},
-			changePlayState(){
-				const currentPlayMode = this.mode + 1 ;
-				this.setPlayMode( currentPlayMode % 3 )
+			changePlayState() {
+				const currentPlayMode = this.mode + 1;
+				this.setPlayMode(currentPlayMode % 3)
+				
+				if(this.mode == playMode.random){
+					var defaultList = this.sequenceList
+//					let list = shuffle(defaultList)
+					
+					console.log(this.sequenceList)
+					
+					
+//					this.setPlayList(list)
+
+				}else{
+					console.log("除了随机")
+					this.setPlayList(this.sequenceList)
+				}
 			}
 		},
 		watch: {

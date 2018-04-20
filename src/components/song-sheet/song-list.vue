@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<ul>
-			<li  v-for="(song,index) in songList" @click="selectSong(index)" >
+			<li v-for="(song,index) in songList" @click="selectSong(index)" :class=" { current : index == currentIndex   } ">
 				<div class="lt">{{index+1}}</div>
 				<div class="ct">
 					<h3>{{song.name}}</h3>
@@ -16,19 +16,25 @@
 </template>
 
 <script>
-	import { mapMutations } from 'vuex'
-
+	import { mapMutations, mapGetters } from 'vuex'
 	export default {
 		props: ['songList'],
 		methods: {
 			selectSong(index) {
 				this.setPlayList(this.songList)
+				this.setSequenceList(this.songList)
 				this.setCurrentIndex(index)
 			},
 			...mapMutations({
-				setPlayList:'SET_PLAYLIST',
-				setCurrentIndex:'SET_CURRENT_INDEX',
+				setPlayList: 'SET_PLAYLIST',
+				setSequenceList: 'SET_SEQUENCE_LIST',
+				setCurrentIndex: 'SET_CURRENT_INDEX',
 			}),
+		},
+		computed: {
+			...mapGetters([
+				'currentIndex',
+			])
 		},
 	}
 </script>
@@ -36,6 +42,16 @@
 <style lang="scss" scoped>
 	ul {
 		>li {
+			&.current {
+				.ct {
+					h3 {
+						color: #B130D2;
+					}
+					p {
+						color: #B130D2;
+					}
+				}
+			}
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
