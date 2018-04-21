@@ -13,7 +13,7 @@
 
 				<div class="cdWraper">
 					<div class="cd" :class="{startMove : !playing}">
-						<img class="cdBg" src="../../../dist/static/img/cdWraper.3b4bce1.png" />
+						<img class="cdBg" src="../../assets/cdWraper.png" />
 						<span>
 							<img :src="currentSong.album.blurPicUrl" alt="" />
 						</span>
@@ -24,7 +24,7 @@
 				<div class="timeLine">
 					<div class="container">
 						<div class="alreadyTime">{{ currentTime | lineTime}}</div>
-						<div class="line">
+						<div class="line" @click="changePlayTime">
 							<div ref="alreadyLine" class="alreadyLine"></div>
 						</div>
 						<div class="allTime">{{currentSong.hMusic.playTime / 1000 | lineTime }}</div>
@@ -213,31 +213,41 @@
 			changePlayState() {
 				const currentPlayMode = this.mode + 1;
 				this.setPlayMode(currentPlayMode % 3)
-
 				if(this.mode == playMode.random) {
 					let currentId = this.currentSong.id; //之前歌曲的id
 					let defaultList = copyAry(this.sequenceList) //深克隆数组
 					this.setPlayList(shuffle(defaultList)); //設置新的播放順序
-
 					let currentIndex = this.playList.findIndex( //查找之前播放歌曲id在新列表位置
 						(e) => {
 							return e.id == currentId
 						}
 					)
 					this.setCurrentIndex(currentIndex)
-
 				} else {
 					let currentId = this.currentSong.id; //之前歌曲的id
-					this.setPlayList(this.sequenceList)//改回正确的列表
+					this.setPlayList(this.sequenceList) //改回正确的列表
 					let currentIndex = this.playList.findIndex( //查找之前播放歌曲id在新列表位置
 						(e) => {
 							return e.id == currentId
 						}
 					)
 					this.setCurrentIndex(currentIndex)
-					
 				}
-			}
+			},
+			changePlayTime(e){
+					//时间轴总宽度
+					let timeLineWidth = e.target.clientWidth;
+					//点击的位置
+					let moveTo = e.layerX;
+					//点击位置占歌曲的百分比
+					let percent = moveTo  / timeLineWidth; 
+					//获取歌曲总时长
+					let currentSongTime = this.currentSong.hMusic.playTime / 1000;
+					//获取更改的时长
+					let beforeTime = currentSongTime * percent;
+					
+					this.$refs.audio.currentTime = beforeTime ;
+			},
 		},
 		watch: {
 			'fullScreen' (e) {
