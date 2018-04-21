@@ -104,9 +104,9 @@
 	import iconList from 'common/svg/icon-list'
 	import iconListM from 'common/svg/icon-list-m'
 	import playListPanel from 'components/play/play-list'
-	import {playMode} from 'common/js/config'
-	import { shuffle } from 'api/util'
-	
+	import { playMode } from 'common/js/config'
+	import { shuffle, copyAry } from 'api/util'
+
 	export default {
 		components: {
 			iconStop,
@@ -160,9 +160,8 @@
 				setCurrentIndex: 'SET_CURRENT_INDEX',
 				setListShow: 'SET_LIST_SHOW',
 				setPlayMode: 'SET_PLAY_MODE',
-				setSequenceList:'SET_SEQUENCE_LIST',
-				setPlayList:'SET_PLAYLIST',
-				
+				setSequenceList: 'SET_SEQUENCE_LIST',
+				setPlayList: 'SET_PLAYLIST',
 
 			}),
 			setFullscreen() {
@@ -214,19 +213,29 @@
 			changePlayState() {
 				const currentPlayMode = this.mode + 1;
 				this.setPlayMode(currentPlayMode % 3)
-				
-				if(this.mode == playMode.random){
-					var defaultList = this.sequenceList
-//					let list = shuffle(defaultList)
-					
-					console.log(this.sequenceList)
-					
-					
-//					this.setPlayList(list)
 
-				}else{
-					console.log("除了随机")
-					this.setPlayList(this.sequenceList)
+				if(this.mode == playMode.random) {
+					let currentId = this.currentSong.id; //之前歌曲的id
+					let defaultList = copyAry(this.sequenceList) //深克隆数组
+					this.setPlayList(shuffle(defaultList)); //設置新的播放順序
+
+					let currentIndex = this.playList.findIndex( //查找之前播放歌曲id在新列表位置
+						(e) => {
+							return e.id == currentId
+						}
+					)
+					this.setCurrentIndex(currentIndex)
+
+				} else {
+					let currentId = this.currentSong.id; //之前歌曲的id
+					this.setPlayList(this.sequenceList)//改回正确的列表
+					let currentIndex = this.playList.findIndex( //查找之前播放歌曲id在新列表位置
+						(e) => {
+							return e.id == currentId
+						}
+					)
+					this.setCurrentIndex(currentIndex)
+					
 				}
 			}
 		},
@@ -237,7 +246,10 @@
 				//否则是关闭
 				this.playTransitionName = e ? 'slide-top' : 'slide-down';
 			},
-			'currentSong' () {
+			'currentSong' (newSong, oldSong) {
+				if(newSong.id == oldSong.id) {
+					return
+				}
 				let _this = this
 				setTimeout(() => {
 					_this.startPlaying()

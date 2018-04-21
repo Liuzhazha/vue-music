@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<ul>
-			<li v-for="(song,index) in songList" @click="selectSong(index)" :class=" { current : index == currentIndex   } ">
+			<li v-for="(song,index) in songList" @click="selectSong(song.id)" :class=" { current : song.id == currentSong.id   } ">
 				<div class="lt">{{index+1}}</div>
 				<div class="ct">
 					<h3>{{song.name}}</h3>
@@ -20,10 +20,16 @@
 	export default {
 		props: ['songList'],
 		methods: {
-			selectSong(index) {
+			selectSong(id) {
 				this.setPlayList(this.songList)
 				this.setSequenceList(this.songList)
-				this.setCurrentIndex(index)
+				
+				let currentIndex = this.playList.findIndex(
+					(e)=>{
+						return e.id == id
+					}
+				)
+				this.setCurrentIndex(currentIndex)
 			},
 			...mapMutations({
 				setPlayList: 'SET_PLAYLIST',
@@ -33,7 +39,8 @@
 		},
 		computed: {
 			...mapGetters([
-				'currentIndex',
+				'currentSong',
+				'playList'
 			])
 		},
 	}

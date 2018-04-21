@@ -2,7 +2,7 @@
 		<div class="playList">
 			<ul>
 				<scroller>
-					<li v-for="(song,index) in sequenceList" :class="{ current : index == currentIndex   }" @click.stop="selectSong(index)"><i v-show="index == currentIndex" class="iconfont icon-laba"></i>
+					<li v-for="(song,index) in sequenceList" :class="{ current : song.id == currentSong.id   }" @click.stop="selectSong(song.id)"><i v-show="song.id == currentSong.id" class="iconfont icon-laba"></i>
 						<p>{{song.name}}</p> <span> - {{song.artists[0].name}}</span> <i  class="iconfont icon-close"></i></li>
 				</scroller>
 			</ul>
@@ -16,15 +16,21 @@
 			...mapGetters([
 				'playList',
 				'currentIndex',
-				'sequenceList'
+				'sequenceList',
+				'currentSong'
 			])
 		},
 		created() {
 			
 		},
 		methods: {
-			selectSong(index) {
-				this.setCurrentIndex(index)
+			selectSong(id) {
+				let currentIndex = this.playList.findIndex(
+					(e)=>{
+						return e.id == id
+					}
+				)
+				this.setCurrentIndex(currentIndex)
 			},
 			...mapMutations({
 				setCurrentIndex: 'SET_CURRENT_INDEX',
