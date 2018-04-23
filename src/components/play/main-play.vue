@@ -50,6 +50,11 @@
 						</div>
 					</div>
 				</div>
+				
+				<!--歌词star-->
+				<layrics-m :layrics="currentLric" :currentNum="currentNumber"  style="position: absolute; bottom: -540px; width: 100%;" ></layrics-m>
+				<!--歌词end-->
+				
 			</div>
 		</transition>
 
@@ -104,8 +109,12 @@
 	import iconList from 'common/svg/icon-list'
 	import iconListM from 'common/svg/icon-list-m'
 	import playListPanel from 'components/play/play-list'
+	import layricsM from 'components/play/layrics-m'
 	import { playMode } from 'common/js/config'
 	import { shuffle, copyAry } from 'api/util'
+	import {getLayrics} from 'api/requst'
+	import Lyric from 'lyric-parser'
+	
 
 	export default {
 		components: {
@@ -117,7 +126,8 @@
 			iconVideoM,
 			iconStopM,
 			iconListM,
-			playListPanel
+			playListPanel,
+			layricsM,
 		},
 		data() {
 			return {
@@ -125,6 +135,8 @@
 				playTransitionName: '',
 				currentTime: 0, //当前时间
 				playListTransition: 'slide', //底部列表动画
+				currentLric:null,
+				currentNumber:0,
 
 			}
 		},
@@ -151,6 +163,7 @@
 			//						console.log(this.currentSong)
 		},
 		created() {
+
 			//			console.log(this.currentSong)
 		},
 		methods: {
@@ -171,10 +184,26 @@
 				this.setFullScreen(false)
 			},
 			startPlaying() {
+				let _this = this;
+				getLayrics(this.currentSong.id).then((res)=>{
+				 _this.currentLric = new Lyric(res.lrc.lyric,_this.handleLyric)
+				 if(this.playing){
+				 	_this.currentLric.play()
+				 }
+				})
+				
 				this.setPlaying(true);
 				const _audio = document.getElementsByTagName("audio")[0];
 				_audio.play();
 			},
+			
+			handleLyric({lineNum, txt}){
+				this.currentNumber = lineNum;
+				console.log("123")
+				console.log(lineNum)
+				console.log(txt)
+			},
+			
 			stopPlaying() {
 				this.setPlaying(false)
 			},
