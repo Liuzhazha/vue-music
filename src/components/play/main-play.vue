@@ -11,7 +11,7 @@
 					</div>
 				</div>
 
-				<div class="cdWraper">
+				<div class="cdWraper" @click="stopLayrics">
 					<div class="cd" :class="{startMove : !playing}">
 						<img class="cdBg" src="../../assets/cdWraper.png" />
 						<span>
@@ -50,11 +50,11 @@
 						</div>
 					</div>
 				</div>
-				
+
 				<!--歌词star-->
-				<layrics-m :layrics="currentLric" :currentNum="currentNumber"  style="position: absolute; bottom: -540px; width: 100%;" ></layrics-m>
+				<layrics-m :layrics="currentLric" :currentNum="currentNumber" v-if="currentLric != null" class="layricsM"></layrics-m>
 				<!--歌词end-->
-				
+
 			</div>
 		</transition>
 
@@ -112,9 +112,8 @@
 	import layricsM from 'components/play/layrics-m'
 	import { playMode } from 'common/js/config'
 	import { shuffle, copyAry } from 'api/util'
-	import {getLayrics} from 'api/requst'
+	import { getLayrics } from 'api/requst'
 	import Lyric from 'lyric-parser'
-	
 
 	export default {
 		components: {
@@ -135,8 +134,8 @@
 				playTransitionName: '',
 				currentTime: 0, //当前时间
 				playListTransition: 'slide', //底部列表动画
-				currentLric:null,
-				currentNumber:0,
+				currentLric: null,
+				currentNumber: 0,
 
 			}
 		},
@@ -184,28 +183,43 @@
 				this.setFullScreen(false)
 			},
 			startPlaying() {
-				let _this = this;
-				getLayrics(this.currentSong.id).then((res)=>{
-				 _this.currentLric = new Lyric(res.lrc.lyric,_this.handleLyric)
-				 if(this.playing){
-				 	_this.currentLric.play()
-				 }
-				})
-				
+				if(this.currentLric) {
+					this.currentLric.togglePlay()
+				}
 				this.setPlaying(true);
 				const _audio = document.getElementsByTagName("audio")[0];
 				_audio.play();
 			},
-			
-			handleLyric({lineNum, txt}){
-				this.currentNumber = lineNum;
-				console.log("123")
-				console.log(lineNum)
-				console.log(txt)
+			getLyrc() {
+				//				if(this.currentLric) {
+				//					this.currentLric.stop();
+				//					console.log(this.currentLric)
+				//				}
+
+				let _this = this;
+				getLayrics(this.currentSong.id).then((res) => {
+					_this.currentLri = null;
+					_this.currentLric = new Lyric(res.lrc.lyric, _this.handleLyric)
+					if(this.playing) {
+						_this.currentLric.play()
+					}
+				})
 			},
-			
+			stopLayrics() {
+				this.currentLric.stop();
+			},
+			handleLyric({
+				lineNum,
+				txt
+			}) {
+				this.currentNumber = lineNum;
+			},
 			stopPlaying() {
 				this.setPlaying(false)
+				if(this.currentLric) {
+					this.currentLric.togglePlay()
+				}
+
 			},
 			next() {
 				let index = this.currentIndex + 1
@@ -263,19 +277,19 @@
 					this.setCurrentIndex(currentIndex)
 				}
 			},
-			changePlayTime(e){
-					//时间轴总宽度
-					let timeLineWidth = e.target.clientWidth;
-					//点击的位置
-					let moveTo = e.layerX;
-					//点击位置占歌曲的百分比
-					let percent = moveTo  / timeLineWidth; 
-					//获取歌曲总时长
-					let currentSongTime = this.currentSong.hMusic.playTime / 1000;
-					//获取更改的时长
-					let beforeTime = currentSongTime * percent;
-					
-					this.$refs.audio.currentTime = beforeTime ;
+			changePlayTime(e) {
+				//时间轴总宽度
+				let timeLineWidth = e.target.clientWidth;
+				//点击的位置
+				let moveTo = e.layerX;
+				//点击位置占歌曲的百分比
+				let percent = moveTo / timeLineWidth;
+				//获取歌曲总时长
+				let currentSongTime = this.currentSong.hMusic.playTime / 1000;
+				//获取更改的时长
+				let beforeTime = currentSongTime * percent;
+
+				this.$refs.audio.currentTime = beforeTime;
 			},
 		},
 		watch: {
@@ -289,6 +303,9 @@
 				if(newSong.id == oldSong.id) {
 					return
 				}
+
+				this.getLyrc()
+
 				let _this = this
 				setTimeout(() => {
 					_this.startPlaying()
@@ -617,5 +634,10 @@
 		top: 0;
 		left: 0;
 		z-index: 159;
+	}
+	
+	.layricsM {
+		top: auto;
+		bottom: 140px;
 	}
 </style>
