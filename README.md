@@ -1,6 +1,6 @@
 # vue-music
 
-> A Vue.js project
+> 一个 vue+wepack 模仿网易云的spa音乐播放器
 
 ## Build Setup
 

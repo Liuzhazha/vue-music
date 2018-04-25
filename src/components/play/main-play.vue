@@ -649,7 +649,7 @@
 	}
 	
 	.layricsM {
-		top: auto;
+		top: auto !important;
 		bottom: 120px;
 	}
 </style>
