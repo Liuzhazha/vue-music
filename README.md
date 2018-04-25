@@ -2,7 +2,7 @@
 
 > 一个 vue+wepack 模仿网易云的spa音乐播放器
 
-##技术栈
+## 技术栈
 >vue webpack axios vue-router es6 vuex 
 
 ## Build Setup
