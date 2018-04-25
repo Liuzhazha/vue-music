@@ -22,11 +22,11 @@
 <style lang="scss" scoped>
 	li {
 		text-align: center;
-		color: #888888;
+		color: #FFFFFF;
 		font-size: 14px;
 		line-height: 3;
 		&.current {
-			color: #FFFFFF;
+			color: #B130D2;
 		}
 	}
 </style>

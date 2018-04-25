@@ -11,7 +11,7 @@
 					</div>
 				</div>
 
-				<div class="cdWraper" @click="stopLayrics">
+				<div class="cdWraper">
 					<div class="cd" :class="{startMove : !playing}">
 						<img class="cdBg" src="../../assets/cdWraper.png" />
 						<span>
@@ -190,36 +190,39 @@
 				const _audio = document.getElementsByTagName("audio")[0];
 				_audio.play();
 			},
+			stopPlaying() {
+				this.setPlaying(false)
+				if(this.currentLric) {
+					this.currentLric.togglePlay()
+				}
+			},
 			getLyrc() {
-				//				if(this.currentLric) {
-				//					this.currentLric.stop();
-				//					console.log(this.currentLric)
-				//				}
-
 				let _this = this;
 				getLayrics(this.currentSong.id).then((res) => {
-					_this.currentLri = null;
+					if(_this.currentLric) {
+						_this.currentLric.stop()
+					}
+					_this.currentLric = null;
 					_this.currentLric = new Lyric(res.lrc.lyric, _this.handleLyric)
-					if(this.playing) {
+					if(_this.playing) {
 						_this.currentLric.play()
 					}
+				}, () => {
+					_this.currentLric = {
+						"lines": [{
+							"time": 0,
+							"txt": "纯音乐请欣赏~"
+						}]
+
+					}
+					return
 				})
-			},
-			stopLayrics() {
-				this.currentLric.stop();
 			},
 			handleLyric({
 				lineNum,
 				txt
 			}) {
 				this.currentNumber = lineNum;
-			},
-			stopPlaying() {
-				this.setPlaying(false)
-				if(this.currentLric) {
-					this.currentLric.togglePlay()
-				}
-
 			},
 			next() {
 				let index = this.currentIndex + 1
@@ -287,9 +290,14 @@
 				//获取歌曲总时长
 				let currentSongTime = this.currentSong.hMusic.playTime / 1000;
 				//获取更改的时长
-				let beforeTime = currentSongTime * percent;
+				let afterTime = currentSongTime * percent;
+				//修改audio對象的播放時間
+				this.$refs.audio.currentTime = afterTime;
 
-				this.$refs.audio.currentTime = beforeTime;
+				if(this.currentLric) {
+					this.currentLric.seek(afterTime * 1000)
+				}
+
 			},
 		},
 		watch: {
@@ -310,6 +318,10 @@
 				setTimeout(() => {
 					_this.startPlaying()
 				}, 0)
+				if(this.currentLric) {
+					this.currentLric.stop();
+				}
+
 			},
 			'playing' (playing) {
 				const _audio = this.$refs.audio;
@@ -638,6 +650,6 @@
 	
 	.layricsM {
 		top: auto;
-		bottom: 140px;
+		bottom: 120px;
 	}
 </style>
