@@ -1,6 +1,7 @@
 <template>
 	<div class="headContainer">
-		 <div class="search"><i class="iconfont icon-search"></i></div>
+		  
+		 <router-link tag="li" to="/main/search"><div  class="search"><i class="iconfont icon-search"></i></div></router-link>
 		 <div  class="recommend active">推荐  </div>
 		 <div class="special">我的 </div>
 		 <div class="music"><i class="iconfont icon-youyinpin"></i></div>
