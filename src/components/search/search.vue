@@ -2,17 +2,32 @@
 	<div class="search">
 		<div class="top">
 			<i class="iconfont icon-fanhui "></i>
-			<div class="inputRow"><input type="text" :value="searchVal" placeholder="123" /></div> 
+			<div class="inputRow"><form><input type="search" v-model="searchVal" placeholder="123" /> <i @click="searchVal = ''" v-show="searchVal.length>0" class="iconfont icon-close"> </i></form></div> 
 		</div>
-		<a href="weixin://dl/business/?ticket=t81c77f994794f31a4767ab5b1c3420ad" style="display: block; width: 500px; height: 500px;">11</a>
+		<div>
+			<search-hint :hintRes = "hintRes"></search-hint>
+		</div>
+		
 	</div>
 </template>
 
 <script>
+	import searchHint from 'components/search/search-hint' 
+	import { getHintVal } from 'api/requst';
 	export default{
+		components:{
+		searchHint,	
+		},
 		data(){
 			return{
 				searchVal:'',
+				hintRes:'',
+			}
+		},
+		watch:{
+			'searchVal'(val){
+				console.log(val,getHintVal)
+				getHintVal(val)
 			}
 		}
 	}
@@ -42,7 +57,10 @@
 		.inputRow {
 			position: relative;
 			width: calc( 100% - 74px);
-			input {
+			form{
+				display: flex;
+				align-items: center;
+				input {
 				display: block;
 				border: none;
 				height: 30px;
@@ -57,6 +75,13 @@
 			&::-webkit-input-placeholder {color: rgba(255,255,255,.6)}
 			&::-moz-placeholder {color: rgba(255,255,255,.6)}
 			&:-ms-input-placeholder {color: rgba(255,255,255,.6)}
+			&::-webkit-search-cancel-button{
+				  display: none;
+				}
+			}
+			i{
+				font-size: 12px;
+			}
 			}
 			
 			&:after {

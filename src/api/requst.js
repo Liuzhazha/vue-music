@@ -12,3 +12,20 @@ export function getLayrics(id) {
 		}
 	})
 }
+
+	
+ export function getHintVal(val){
+console.log(val)
+ 	
+		return axios.get('http://39.106.114.207:443/search/suggest',{
+			params:{
+				keywords:val,
+				limit:10,
+				offset:0,
+			}
+		}).then((res)=>{
+			console.log(res)
+		})
+
+
+	}
