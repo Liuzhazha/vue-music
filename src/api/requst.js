@@ -15,8 +15,6 @@ export function getLayrics(id) {
 
 	
  export function getHintVal(val){
-console.log(val)
- 	
 		return axios.get('http://39.106.114.207:443/search/suggest',{
 			params:{
 				keywords:val,
@@ -24,7 +22,12 @@ console.log(val)
 				offset:0,
 			}
 		}).then((res)=>{
-			console.log(res)
+			console.log(res.data.result)
+			if(res.data.code == 200){
+				return Promise.resolve(res.data)
+			}else{
+				return Promise.reject(res.data.code)
+			}
 		})
 
 

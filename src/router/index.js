@@ -5,6 +5,7 @@ import main from 'components/main/main'
 import exclusiveBody from 'components/exclusive-body/exclusive-body'
 import songSheet from 'components/song-sheet/song-sheet'
 import search from 'components/search/search'
+import NotFoundComponent from 'components/main/not-found-component'
 
 Vue.use(Router)
 
@@ -28,14 +29,16 @@ export default new Router({
 			name: 'main',
 			path: '/main',
 			component: main,
-			children:[
-			]
+			children: []
 		},
 		{
 			name: 'search',
 			path: '/main/search',
 			component: search,
+		},
+		{
+			path: '*',
+			component: NotFoundComponent
 		}
 	]
 })
-
